@@ -9,6 +9,8 @@ namespace Opensoft\Bundle\UpsShipmentBundle\Services;
 
 use stdClass;
 use Ups\Entity\Shipment;
+use Ups\Entity\ShipmentRequestLabelSpecification;
+use Ups\Entity\ShipmentRequestReceiptSpecification;
 use Ups\Shipping;
 
 /**
@@ -43,12 +45,16 @@ class UpsShipmentService
      *
      * @param Shipment $shipment
      * @param string $validationFlag
-     * @param stdClass|null $labelSpec
-     * @param stdClass|null $receiptSpec
+     * @param ShipmentRequestLabelSpecification|null $labelSpec
+     * @param ShipmentRequestReceiptSpecification|null $receiptSpec
      * @return stdClass
      */
-    public function submitShipment(Shipment $shipment, $validationFlag = Shipping::REQ_NONVALIDATE, $labelSpec = null, $receiptSpec = null)
-    {
+    public function submitShipment(
+        Shipment $shipment,
+        $validationFlag = Shipping::REQ_NONVALIDATE,
+        ShipmentRequestLabelSpecification $labelSpec = null,
+        ShipmentRequestReceiptSpecification $receiptSpec = null
+    ) {
         $confirmResponse = $this->shippingService->confirm($validationFlag, $shipment, $labelSpec, $receiptSpec);
 
         $acceptResponse = $this->shippingService->accept($confirmResponse->ShipmentDigest);
@@ -65,12 +71,16 @@ class UpsShipmentService
      *
      * @param Shipment $shipment
      * @param string $validationFlag
-     * @param stdClass|null $labelSpec
-     * @param stdClass|null $receiptSpec
+     * @param ShipmentRequestLabelSpecification|null $labelSpec
+     * @param ShipmentRequestReceiptSpecification|null $receiptSpec
      * @return stdClass
      */
-    public function confirmShipment(Shipment $shipment, $validationFlag = Shipping::REQ_NONVALIDATE, $labelSpec = null, $receiptSpec = null)
-    {
+    public function confirmShipment(
+        Shipment $shipment,
+        $validationFlag = Shipping::REQ_NONVALIDATE,
+        ShipmentRequestLabelSpecification $labelSpec = null,
+        ShipmentRequestReceiptSpecification $receiptSpec = null
+    ) {
         $confirmResponse = $this->shippingService->confirm($validationFlag, $shipment, $labelSpec, $receiptSpec);
 
         return $confirmResponse;
@@ -84,7 +94,7 @@ class UpsShipmentService
      *  + /PackageResults/LabelImage/GraphicImage - string of base64 encoded label data
      *  + /ShipmentIdentificationNumber - UPS tracking number
      *
-     * @param $shipmentDigest - digest from response to Shipment Confirm request
+     * @param string $shipmentDigest - digest from response to Shipment Confirm request
      * @return stdClass
      */
     public function acceptShipment($shipmentDigest)
